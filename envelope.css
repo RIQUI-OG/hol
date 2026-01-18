@@ -1,0 +1,246 @@
+.envelope-wrapper {
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 5vw;
+    align-items: center;
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    pointer-events: none; /* Permite ver el fondo si no se interactúa */
+}
+
+.envelope-wrapper.active {
+    pointer-events: auto;
+}
+
+.envelope-wrapper.letter-expanded {
+    pointer-events: none;
+}
+
+#envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background-color: #f0d0d0;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    transition: transform 0.5s, opacity 1s;
+    opacity: 0; /* Oculto inicialmente */
+    transform: scale(0); /* Pequeño inicialmente */
+    top: -150px; /* Mueve el sobre hacia arriba para separarlo visualmente de las flores */
+}
+
+#envelope.open {
+    cursor: default;
+    pointer-events: none; /* Evita que parpadee (hover) después de abrirse */
+    transform: none !important; /* Asegura que se quede quieto y anula cualquier hover */
+    transition: none; /* Elimina transiciones para evitar movimientos residuales */
+}
+
+/* La solapa superior (triángulo) */
+.front.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 110px solid #f58f8f; /* Color más oscuro para la solapa */
+    transform-origin: top;
+    transition: transform 0.4s 0.5s, z-index 0.2s 0.5s;
+    z-index: 4;
+    box-sizing: content-box !important; /* Importante para que el triángulo se dibuje bien */
+}
+
+/* El bolsillo (triángulo inferior) */
+.front.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 120px solid #ff9999;
+    z-index: 3;
+    box-sizing: content-box !important;
+}
+
+/* Solapas laterales (para cerrar el sobre completamente) */
+.front.left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 180px solid #fae1e1;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    z-index: 2;
+    box-sizing: content-box !important;
+}
+
+.front.right {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 180px solid #fae1e1;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    z-index: 2;
+    box-sizing: content-box !important;
+}
+
+/* La carta interior */
+.letter {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 280px;
+    height: 180px;
+    background-color: white;
+    z-index: 1;
+    transition: transform 0.5s 1s, z-index 0.1s 1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.words {
+    font-family: 'Arial', sans-serif; /* Puedes cambiar la fuente aquí */
+    font-size: 28px;
+    font-weight: bold;
+    color: #d63333;
+    text-align: center;
+}
+
+/* Estilos para el texto largo */
+.long-text {
+    display: none; /* Oculto inicialmente */
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.long-text p {
+    margin-bottom: 15px;
+}
+
+/* Clase para expandir la carta */
+.letter.full-size {
+    position: fixed;
+    top: 50%;
+    left: 10px; /* Cambiado para estar más a la izquierda */
+    transform: translateY(-50%) !important; /* Solo centra verticalmente */
+    width: 45vw; /* Ocupa casi la mitad de la pantalla */
+    max-width: 600px;
+    height: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 12000; /* Por encima de todo, incluso la lluvia */
+    padding: 40px;
+    box-sizing: border-box;
+    transition: all 1s ease-in-out;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    pointer-events: auto; /* Permite seleccionar texto y hacer scroll */
+}
+
+.letter.full-size .words {
+    display: none;
+}
+
+.letter.full-size .long-text {
+    display: block;
+}
+
+/* Animación de apertura */
+#envelope.open .front.flap {
+    transform: rotateX(180deg);
+    z-index: 0;
+    transition: transform 0.4s, z-index 0.2s;
+}
+
+#envelope.open .letter {
+    transform: translateY(-100px); /* Saca la carta hacia arriba */
+    z-index: 5; /* La pone por encima del bolsillo y laterales */
+    transition: transform 0.5s 0.4s, z-index 0.1s 0.4s;
+}
+
+/* Corazones decorativos */
+.hearts {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.heart {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: red;
+    transform: rotate(45deg);
+    opacity: 0;
+}
+
+.heart:before, .heart:after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: red;
+    border-radius: 50%;
+}
+
+.heart:before { top: -10px; left: 0; }
+.heart:after { left: -10px; top: 0; }
+
+#envelope.open .heart.a1 { animation: floatUp 2s ease-out forwards 0.8s; left: -30px; }
+#envelope.open .heart.a2 { animation: floatUp 2s ease-out forwards 1s; left: 0px; }
+#envelope.open .heart.a3 { animation: floatUp 2s ease-out forwards 1.2s; left: 30px; }
+
+@keyframes floatUp {
+    0% { transform: rotate(45deg) translateY(0) scale(1); opacity: 1; }
+    100% { transform: rotate(45deg) translateY(-150px) scale(0); opacity: 0; }
+}
+
+/* Clase para mostrar el sobre */
+#envelope.appear {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Estilos para la lluvia de corazones */
+.heart-rain {
+    position: fixed;
+    top: -10vh;
+    font-size: 2rem;
+    z-index: 10000;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+/* Animación para irse como estrella fugaz */
+.fly-away {
+    animation: flyAway 1.5s ease-in forwards;
+}
+
+@keyframes flyAway {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.2) translate(2000px, -2000px) rotate(45deg); opacity: 0; }
+}
